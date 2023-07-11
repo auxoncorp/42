@@ -126,19 +126,20 @@ ifeq ($(42PLATFORM),__linux__)
          GUIOBJ = $(OBJ)42gl.o $(OBJ)42glut.o $(OBJ)glkit.o $(OBJ)42gpgpu.o
          LIBS = -lglut -lGLU -lGL -ldl -lm -lpthread
          GLINC = -I /usr/include/GL/
-         LFLAGS = -L $(KITDIR)/GL/lib/
+         LFLAGS = -L $(KITDIR)/GL/lib/ -flto
          GUI_LIB = -D _USE_GLUT_
       else
          GUIOBJ = $(OBJ)42gl.o $(OBJ)42glfw.o $(OBJ)glkit.o $(OBJ)42gpgpu.o
          LIBS = -lglfw -lglut -lGLU -lGL -ldl -lm -lpthread
          GLINC = -I /usr/include/GL/ -I /usr/include/GLFW
+         LFLAGS = -flto
          GUI_LIB = -D _USE_GLFW_
       endif
    else
       GUIOBJ =
       GLINC =
       LIBS = -ldl -lm -lpthread
-      LFLAGS =
+      LFLAGS = -flto
    endif
    XWARN = -Wno-unused-variable -Wno-unused-but-set-variable -Wno-stringop-overread
    EXENAME = 42
@@ -241,7 +242,7 @@ $(OBJ)AppWriteToSocket.o $(OBJ)AppReadFromSocket.o $(OBJ)AppWriteToFile.o
 #ANSIFLAGS = -Wstrict-prototypes -pedantic -ansi -Werror
 ANSIFLAGS =
 
-CFLAGS = -fpic -Wall -Wshadow -Wno-deprecated $(XWARN) -g  $(ANSIFLAGS) $(GLINC) $(CINC) -I $(INC) -I $(KITINC) -I $(KITSRC) $(GMSECINC) -O0 $(ARCHFLAG) $(GUIFLAG) $(GUI_LIB) $(SHADERFLAG) $(CFDFLAG) $(FFTBFLAG) $(GSFCFLAG) $(GMSECFLAG) $(STANDALONEFLAG) $(RBTFLAG)
+CFLAGS = -fpic -flto -Wall -Wshadow -Wno-deprecated $(XWARN) -g  $(ANSIFLAGS) $(GLINC) $(CINC) -I $(INC) -I $(KITINC) -I $(KITSRC) $(GMSECINC) -O2 $(ARCHFLAG) $(GUIFLAG) $(GUI_LIB) $(SHADERFLAG) $(CFDFLAG) $(FFTBFLAG) $(GSFCFLAG) $(GMSECFLAG) $(STANDALONEFLAG) $(RBTFLAG)
 
 
 ##########################  Rules to link 42  #############################
@@ -251,7 +252,7 @@ CFLAGS = -fpic -Wall -Wshadow -Wno-deprecated $(XWARN) -g  $(ANSIFLAGS) $(GLINC)
 
 AcApp : $(OBJ)AcApp.o $(ACKITOBJ) $(ACIPCOBJ) $(GMSECOBJ)
 	$(CC) $(LFLAGS) -o AcApp $(OBJ)AcApp.o $(ACKITOBJ) $(ACIPCOBJ) $(GMSECOBJ) $(LIBS)
-	
+
 42kit : $(LIBKITOBJ)
 	$(CC) $(LFLAGS) -shared -o $(KITDIR)42kit.so $(LIBKITOBJ)
 
