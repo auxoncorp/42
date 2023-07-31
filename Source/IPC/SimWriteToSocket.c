@@ -11,7 +11,7 @@ void WriteToSocket(SOCKET Socket,  char **Prefix, long Nprefix, long EchoEnabled
 
       long Isc,Iorb,Iw,Ipfx,i;
       char AckMsg[5] = "Ack\n";
-      char Msg[16384*2];
+      char Msg[16384*4];
       long MsgLen = 0;
       long LineLen;
       long PfxLen;
